@@ -36,6 +36,17 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(result["checkpoints"], [])
         self.assertEqual(result["phases"][0]["session"], 1)
 
+    def test_projected_eighty_percent_window_demand_is_rejected(self):
+        usage = request()["usage"]
+        usage["primary"]["used_percent"] = 79
+        result = plan_project(request(usage=usage))
+        self.assertEqual(result["status"], "infeasible")
+
+    def test_projected_under_eighty_percent_window_demand_is_approved(self):
+        usage = request()["usage"]
+        usage["primary"]["used_percent"] = 77
+        self.assertEqual(plan_project(request(usage=usage))["status"], "feasible")
+
     def test_multi_session_covers_all_sessions_and_uses_reset_timing(self):
         scope = request()["scope"]
         scope["phases"] = [{"name": "A", "objective": "a", "model": "codex", "token_budget": 10000},

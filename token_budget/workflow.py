@@ -103,6 +103,11 @@ def _countdown(epoch: int, now: int) -> int:
     return max(0, epoch - now)
 
 
+def _projected_80_stop(current: float, reserved: float, cap: float = 100) -> bool:
+    """Match the controller's inclusive projected 80% boundary."""
+    return (current + reserved) * 5 >= cap * 4
+
+
 @dataclass(frozen=True)
 class Phase:
     number: int
@@ -153,9 +158,9 @@ def plan_project(request: dict[str, Any], *, now: int | None = None) -> dict[str
     secondary_demand = _demand(request.get("required_secondary_points"), "required_secondary_points", now, demand_age, calibration_age)
     max_task = _integer(request.get("max_task_tokens"), "max_task_tokens", positive=True)
     max_session = _integer(request.get("max_session_tokens", max_task), "max_session_tokens", positive=True)
-    if primary_demand["points"] > primary_cap or primary["used_percent"] + primary_demand["points"] > 100:
+    if primary_demand["points"] > primary_cap or _projected_80_stop(primary["used_percent"], primary_demand["points"]):
         return {"status": "infeasible", "reasons": ["5-hour demand exceeds its proposed cap or remaining window"]}
-    if secondary_demand["points"] > secondary_cap or secondary["used_percent"] + secondary_demand["points"] > 100:
+    if secondary_demand["points"] > secondary_cap or _projected_80_stop(secondary["used_percent"], secondary_demand["points"]):
         return {"status": "infeasible", "reasons": ["weekly demand exceeds its proposed cap or remaining window"]}
     phases: list[dict[str, Any]] = []
     for index, raw in enumerate(scope["phases"], 1):

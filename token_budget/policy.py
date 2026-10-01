@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 from math import isfinite
+from collections.abc import Mapping
 from typing import Any
 
 
@@ -26,11 +27,13 @@ class PolicyDecision:
     task_cap: int
     task_used_percent: float
     explicit_override: bool
+    override_record: dict[str, Any] | None = None
 
     def to_dict(self) -> dict[str, Any]:
         """Return a JSON friendly representation of this decision."""
         value = asdict(self)
         value["allowed_behaviors"] = list(self.allowed_behaviors)
+        value["override"] = value.pop("override_record")
         return value
 
 
@@ -62,7 +65,7 @@ def evaluate_policy(
     provider_window_used_percent: float,
     task_observed_tokens: int,
     task_cap: int,
-    explicit_override: bool = False,
+    explicit_override: Mapping[str, Any] | None = None,
 ) -> PolicyDecision:
     """Evaluate the initial policy from DESIGN.md.
 
@@ -74,9 +77,27 @@ def evaluate_policy(
     provider_percent, observed, cap = _validate(
         provider_window_used_percent, task_observed_tokens, task_cap
     )
-    if type(explicit_override) is not bool:
-        raise ValueError("explicit override must be a boolean")
-    override = explicit_override
+    override_record: dict[str, Any] | None
+    if isinstance(explicit_override, Mapping):
+        required = ("task", "window", "added_cap", "reason", "expiry")
+        if any(field not in explicit_override for field in required):
+            raise ValueError("override requires task, window, added_cap, reason, and expiry")
+        task, window, reason_text = (explicit_override[field] for field in ("task", "window", "reason"))
+        added_cap, expiry = explicit_override["added_cap"], explicit_override["expiry"]
+        if any(not isinstance(value, str) or not value.strip() for value in (task, window, reason_text)):
+            raise ValueError("override task, window, and reason must be non-empty strings")
+        if isinstance(expiry, bool) or not isinstance(expiry, int) or expiry <= 0:
+            raise ValueError("override expiry must be a positive integer")
+        if isinstance(added_cap, bool) or not isinstance(added_cap, (int, float)) or not isfinite(float(added_cap)) or added_cap <= 0:
+            raise ValueError("override added_cap must be a positive number")
+        override_record = {"task": task.strip(), "window": window.strip(), "added_cap": added_cap,
+                           "reason": reason_text.strip(), "expiry": expiry}
+        override = True
+    elif explicit_override is None:
+        override = False
+        override_record = None
+    else:
+        raise ValueError("explicit override must be a structured override record")
     task_percent = (observed / cap) * 100
     provider_level = _band(provider_percent)
     task_level = _band(task_percent)
@@ -142,6 +163,7 @@ def evaluate_policy(
         task_cap=cap,
         task_used_percent=task_percent,
         explicit_override=override,
+        override_record=override_record,
     )
 
 

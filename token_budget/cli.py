@@ -20,7 +20,11 @@ def main(argv=None) -> int:
     policy.add_argument("--provider-used-percent", type=float, required=True)
     policy.add_argument("--task-observed-tokens", type=int, required=True)
     policy.add_argument("--task-cap", type=int, required=True)
-    policy.add_argument("--override", action="store_true", help="explicitly permit a stopped call")
+    policy.add_argument("--override-task")
+    policy.add_argument("--override-window")
+    policy.add_argument("--override-added-cap", type=float)
+    policy.add_argument("--override-reason")
+    policy.add_argument("--override-expiry", type=int)
     plan = sub.add_parser("plan", help="plan a complete project from JSON")
     plan.add_argument("--input", type=Path, help="JSON input file; stdin when omitted")
     receipt = sub.add_parser("receipt", help="create a build receipt from JSON")
@@ -45,7 +49,8 @@ def main(argv=None) -> int:
         cmd = sub.add_parser(f"managed-{name}", help=f"{name} user-scoped Token Budget files")
         cmd.add_argument("--root", type=Path)
         cmd.add_argument("--dry-run", action="store_true")
-    args = parser.parse_args(argv); ledger = Ledger(args.db)
+    args = parser.parse_args(argv)
+    ledger = Ledger(args.db) if args.command in {"ingest", "summary"} else None
     try:
         if args.command == "ingest":
             events = []
@@ -56,11 +61,21 @@ def main(argv=None) -> int:
         elif args.command == "summary":
             print(json.dumps(ledger.summary(), sort_keys=True))
         elif args.command == "policy":
+            override_values = [args.override_task, args.override_window, args.override_added_cap,
+                               args.override_reason, args.override_expiry]
+            if any(value is not None for value in override_values):
+                if not all(value is not None for value in override_values):
+                    raise ValueError("all override fields are required together")
+                override = {"task": args.override_task, "window": args.override_window,
+                            "added_cap": args.override_added_cap, "reason": args.override_reason,
+                            "expiry": args.override_expiry}
+            else:
+                override = None
             decision = evaluate_policy(
                 args.provider_used_percent,
                 args.task_observed_tokens,
                 args.task_cap,
-                args.override,
+                override,
             )
             print(json.dumps(decision.to_dict(), sort_keys=True))
         elif args.command == "plan":
@@ -117,7 +132,9 @@ def main(argv=None) -> int:
                 result = launch_managed_codex(controller, adapter, **call_data, codex_args=argsv)
                 print(json.dumps(result, sort_keys=True))
             finally: controller.close()
-    finally: ledger.close()
+    finally:
+        if ledger is not None:
+            ledger.close()
     return 0
 
 if __name__ == "__main__": raise SystemExit(main())

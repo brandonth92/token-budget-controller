@@ -1,7 +1,9 @@
 import json
 import subprocess
 import sys
+import tempfile
 import unittest
+from pathlib import Path
 
 from token_budget.policy import evaluate_policy
 
@@ -21,13 +23,23 @@ class PolicyTests(unittest.TestCase):
         self.assertIn("task usage", decision.reason)
 
     def test_stop_override_is_explicit_and_scoped(self):
-        decision = evaluate_policy(80, 80, 100, explicit_override=True)
+        decision = evaluate_policy(80, 80, 100, explicit_override={
+            "task": "migration", "window": "short", "added_cap": 5,
+            "reason": "finish required verification", "expiry": 2000,
+        })
         self.assertEqual(decision.mode, "stop")
         self.assertTrue(decision.explicit_override)
         self.assertEqual(decision.allowed_behaviors[0], "make one explicitly authorized model call")
 
+    def test_structured_override_is_recorded(self):
+        decision = evaluate_policy(80, 80, 100, explicit_override={
+            "task": "migration", "window": "short", "added_cap": 5,
+            "reason": "finish required verification", "expiry": 2000,
+        })
+        self.assertEqual(decision.to_dict()["override"]["window"], "short")
+
     def test_non_boolean_overrides_are_rejected(self):
-        for value in ("true", 1, 0, [], {"override": True}, None):
+        for value in ("true", True, 1, 0, [], {"override": True}):
             with self.assertRaises(ValueError):
                 evaluate_policy(80, 80, 100, explicit_override=value)
 
@@ -38,6 +50,17 @@ class PolicyTests(unittest.TestCase):
             check=True, capture_output=True, text=True,
         )
         self.assertEqual(json.loads(result.stdout)["mode"], "efficient")
+
+    def test_cli_read_only_policy_does_not_create_database(self):
+        with tempfile.TemporaryDirectory() as directory:
+            database = Path(directory) / "unused.sqlite"
+            result = subprocess.run(
+                [sys.executable, "-m", "token_budget.cli", "--db", str(database), "policy",
+                 "--provider-used-percent", "50", "--task-observed-tokens", "1", "--task-cap", "100"],
+                check=True, capture_output=True, text=True,
+            )
+            self.assertEqual(json.loads(result.stdout)["mode"], "efficient")
+            self.assertFalse(database.exists())
 
 
 if __name__ == "__main__":

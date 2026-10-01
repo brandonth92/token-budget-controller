@@ -154,9 +154,8 @@ Grok live adapters, system-wide installation, transparent interception, and
 release packaging remain unsupported.
 
 Earlier ledger and workflow components received scoped GPT-6 Astra clearance.
-After correction of four additional state-machine defects, the final scoped
-controller review returned CLEAR and independently passed all 30 packaged
-controller tests. This clearance covers the managed-wrapper controller and its
-static/manual snapshot boundary; the Codex adapter and installer have not
-received that review. See
+The 2026-09-23 correction receipt records local verification, but not final
+Astra clearance; a third review of the corrections was not performed. This
+clearance covers the managed-wrapper controller and its static/manual snapshot
+boundary; the Codex adapter and installer have not received that review. See
 [the roadmap](docs/ROADMAP.md).
