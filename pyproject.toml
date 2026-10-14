@@ -9,3 +9,7 @@ requires-python = ">=3.10"
 Repository = "https://github.com/The-Screen-Surgeon/token-budget-controller"
 [project.scripts]
 token-budget = "token_budget.cli:main"
+
+[tool.setuptools]
+# Explicit so setuptools does not treat landing/ or docs/ as packages (flat-layout discovery)
+packages = ["token_budget"]
