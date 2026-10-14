@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Token Budget is deterministic token accounting and adaptive execution for coding agents. Local SQLite ledger, fail-closed budget gates for Codex and Claude Code, per-task receipts. MIT licensed, runs entirely on your machine.">
+    <meta name="theme-color" content="#f7f5ef">
+    <link rel="canonical" href="https://brandonth92.github.io/token-budget-controller/">
+    <meta property="og:title" content="Token Budget · Deterministic token accounting for coding agents">
+    <meta property="og:description" content="Factual usage in, budgets enforced, receipts out. Local SQLite ledger, fail-closed gates — and it never stores your prompts or responses.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://brandonth92.github.io/token-budget-controller/">
+    <meta property="og:image" content="https://brandonth92.github.io/token-budget-controller/logo.svg">
+    <title>Token Budget · Deterministic token accounting for coding agents</title>
+    <link rel="icon" type="image/svg+xml" href="logo.svg">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="site-header">
+        <a class="brand" href="./" aria-label="Token Budget home">
+          <img src="logo.svg" alt="" width="40" height="40">
+          <span>Token Budget</span>
+        </a>
+        <nav class="site-nav" aria-label="Primary navigation">
+          <a href="#what-it-is">What it is</a>
+          <a href="#how-it-works">How it works</a>
+          <a href="#start">Get started</a>
+          <a href="#faq">FAQ</a>
+          <a class="nav-github" href="https://github.com/brandonth92/token-budget-controller">GitHub <span aria-hidden="true">↗</span></a>
+        </nav>
+        <a class="header-cta" href="#start">Get started <span aria-hidden="true">↓</span></a>
+      </header>
+
+      <main>
+        <section class="hero" aria-labelledby="hero-heading">
+          <div class="hero-copy">
+            <p class="kicker"><span class="kicker-dot" aria-hidden="true"></span> Deterministic token budgeting · Codex + Claude Code</p>
+            <h1 id="hero-heading">Know what your agents<br><em>actually spent.</em></h1>
+            <p class="hero-lede">Token Budget turns provider-reported usage into a local, replay-safe ledger, then gates agent work against real budget windows — plan in, receipt out. No estimates. No vibes. And it never stores a prompt.</p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#start">Get started <span aria-hidden="true">↓</span></a>
+              <a class="text-link" href="https://github.com/brandonth92/token-budget-controller/blob/main/UNIVERSAL-USAGE-BUDGET.md">Read the Universal Protocol <span aria-hidden="true">→</span></a>
+            </div>
+            <div class="trust-row" aria-label="Token Budget promises">
+              <span><b aria-hidden="true">✓</b> Facts, never estimates</span>
+              <span><b aria-hidden="true">✓</b> No prompts or responses stored</span>
+              <span><b aria-hidden="true">✓</b> Fail-closed gates</span>
+              <span><b aria-hidden="true">✓</b> MIT licensed</span>
+            </div>
+          </div>
+
+          <div class="hero-product" aria-label="Preview of the Token Budget ledger">
+            <div class="product-window">
+              <div class="window-bar">
+                <div class="window-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+                <span>token-budget · ledger.sqlite</span>
+                <span class="window-lock" aria-hidden="true">⌂ Local</span>
+              </div>
+              <div class="product-body">
+                <div class="product-brand"><img src="logo.svg" alt="" width="28" height="28"><strong>Token Budget</strong><small>sample ledger · local only</small></div>
+                <div class="product-tabs"><span class="selected">Ledger</span><span>Plan</span><span>Receipt</span></div>
+                <div class="product-card">
+                  <small class="product-label">FIVE-HOUR PROVIDER WINDOW</small>
+                  <div class="meter-readout"><strong>58%</strong><span>used of an 80% hard stop</span></div>
+                  <div class="meter-track" aria-hidden="true"><div class="meter-fill"></div><div class="meter-stop"></div></div>
+                  <div class="meter-hint" aria-hidden="true"><span>0%</span><span>80% stop</span><span>100%</span></div>
+                  <strong class="gate-verdict">Conserve · next call reserved</strong>
+                  <span>Resets in 2h 14m · reserves held across replays</span>
+                  <div class="product-sources"><span>normal</span><span>efficient</span><b>conserve</b><span>stop</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="privacy-card"><span class="privacy-mark" aria-hidden="true">⌂</span><div><strong>Your usage stays yours.</strong><small>Usage metadata only — never prompts or responses.</small></div></div>
+          </div>
+        </section>
+
+        <section class="signal-strip" aria-label="Token Budget summary">
+          <div><strong>Ingest.</strong> Gate. Receipt.</div>
+          <span aria-hidden="true">·</span>
+          <div><strong>Fail closed,</strong> never silently.</div>
+          <span aria-hidden="true">·</span>
+          <div><strong>Your data.</strong> Your machine.</div>
+        </section>
+
+        <section id="what-it-is" class="content-section" aria-labelledby="why-heading">
+          <div class="section-heading">
+            <p class="eyebrow">WHAT IT IS</p>
+            <h2 id="why-heading">An accountant for your agents,<br><em>not another dashboard.</em></h2>
+            <p>Token Budget watches the one number your agent stack actually burns — tokens — and makes every decision from facts instead of estimates.</p>
+          </div>
+          <div class="feature-grid">
+            <article class="feature-card feature-card-dark">
+              <span class="feature-number">01</span>
+              <div class="feature-icon" aria-hidden="true">⌂</div>
+              <h3>Local, private ledger</h3>
+              <p>Usage lands in a SQLite ledger on your disk. Codex and Claude Code session records are ingested with replay-safe dedupe and separated into factual categories: input, cached input, cache creation, output, reasoning.</p>
+            </article>
+            <article class="feature-card">
+              <span class="feature-number">02</span>
+              <div class="feature-icon" aria-hidden="true">◉</div>
+              <h3>Deterministic gates</h3>
+              <p>normal, efficient, conserve, stop. Identical inputs produce identical decisions. Stale or missing usage fails closed with DENY_USAGE_UNAVAILABLE — never a quiet estimate.</p>
+            </article>
+            <article class="feature-card">
+              <span class="feature-number">03</span>
+              <div class="feature-icon" aria-hidden="true">↗</div>
+              <h3>Auditable by construction</h3>
+              <p>Plans, revisions, per-window reservations, and decisions chain into an append-only hash. The final receipt is derived evidence, not a promise.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="how-it-works" class="process-section" aria-labelledby="process-heading">
+          <div class="section-heading section-heading-centered">
+            <p class="eyebrow">HOW IT WORKS</p>
+            <h2 id="process-heading">From clone to controlled spend<br><em>in three steps.</em></h2>
+          </div>
+          <div class="process-grid">
+            <div class="process-step"><span class="step-number">1</span><div><h3>Ingest the facts</h3><p>Point it at ~/.codex/sessions and ~/.claude/projects. Replays dedupe; every category is kept factually.</p></div></div>
+            <div class="process-line" aria-hidden="true"></div>
+            <div class="process-step"><span class="step-number">2</span><div><h3>Gate every call</h3><p>plan checks reserves against live windows and returns a full schedule, needs_clarification, or infeasible — it never invents phases. Over budget or out of data means deny.</p></div></div>
+            <div class="process-line" aria-hidden="true"></div>
+            <div class="process-step"><span class="step-number">3</span><div><h3>Issue the receipt</h3><p>receipt emits per-model factual tokens, remaining balances, and deterministic seconds until both windows reset.</p></div></div>
+          </div>
+        </section>
+
+        <section id="start" class="download-section" aria-labelledby="start-heading">
+          <div class="download-heading">
+            <div>
+              <p class="eyebrow">GET STARTED</p>
+              <h2 id="start-heading">From clone to ledger in a minute.</h2>
+              <p>Everything runs locally with Python 3.10+. The MVP ingests Codex and Claude Code session records.</p>
+            </div>
+            <span class="release-pill"><span aria-hidden="true">●</span> MIT · v0.1.0</span>
+          </div>
+          <div class="download-grid">
+            <article class="download-card download-card-featured">
+              <div class="platform-top"><span class="platform-icon" aria-hidden="true">▣</span><span class="platform-badge">Start here</span></div>
+              <h3>CLI quickstart</h3>
+              <p>Clone, install into your Python environment, and pull your Codex and Claude Code history into one ledger.</p>
+<div class="terminal terminal-on-dark"><strong>git clone</strong> https://github.com/brandonth92/token-budget-controller
+<strong>cd</strong> token-budget-controller
+python3 -m pip install -e .
+<span class="terminal-cmt"># ingest real session records</span>
+python3 -m token_budget.cli --db ~/.local/state/token-budget/ledger.sqlite ingest \
+    --codex ~/.codex/sessions --claude ~/.claude/projects
+python3 -m token_budget.cli --db ~/.local/state/token-budget/ledger.sqlite summary</div>
+              <a class="download-button" href="https://github.com/brandonth92/token-budget-controller">Clone &amp; install <span aria-hidden="true">↓</span></a>
+              <a class="download-alt" href="https://github.com/The-Screen-Surgeon/token-budget-controller">Prefer the Screen Surgeon mirror?</a>
+              <small>Local SQLite · replay-safe ingestion</small>
+            </article>
+            <article class="download-card">
+              <div class="platform-top"><span class="platform-icon" aria-hidden="true">⇄</span><span class="platform-badge platform-badge-muted">Codex</span></div>
+              <h3>Managed launcher</h3>
+              <p>An optional user-scoped installer adds a codex-managed launcher that reads live account limits and reserves each call. Outside the launcher, calls stay unmanaged — and the tool says so.</p>
+<div class="terminal">token-budget managed-install
+token-budget managed-doctor
+token-budget managed-uninstall</div>
+              <a class="download-button download-button-light" href="https://github.com/brandonth92/token-budget-controller#controller-mvp">Installer guide <span aria-hidden="true">↗</span></a>
+              <small>User-scoped install · ownership manifest · doctor checks</small>
+            </article>
+            <article class="download-card">
+              <div class="platform-top"><span class="platform-icon" aria-hidden="true">¶</span><span class="platform-badge platform-badge-muted">Portable</span></div>
+              <h3>Universal Protocol</h3>
+              <p>A provider-neutral, fail-closed spec for planning, gating, adaptation, and receipts. Paste it into any agent that can expose factual usage; pair it with a hook or proxy for hard stops.</p>
+<div class="terminal">"provider": "your-provider",
+"windows": { "short": { ... }, "long": { ... } }
+<span class="terminal-cmt"># stale or missing → DENY_USAGE_UNAVAILABLE</span></div>
+              <a class="download-button download-button-light" href="https://github.com/brandonth92/token-budget-controller/blob/main/UNIVERSAL-USAGE-BUDGET.md">Read the protocol <span aria-hidden="true">↗</span></a>
+              <small>Stable window keys: short / long · integers only</small>
+            </article>
+          </div>
+          <p class="download-note">Token counting happens before any model call. Subscription window percentages enter only as sourced, timestamped calibrations — factual tokens and provider percentages keep separate lanes.</p>
+        </section>
+
+        <section id="faq" class="faq-section" aria-labelledby="faq-heading">
+          <div class="section-heading">
+            <p class="eyebrow">GOOD TO KNOW</p>
+            <h2 id="faq-heading">Questions, answered.</h2>
+          </div>
+          <div class="faq-grid">
+            <details open><summary>Does anything leave my machine?</summary><p>No cloud calls, no accounts. The ledger is a local SQLite file, and ingestion reads your provider's own session records off disk. What gets stored is factual usage metadata — never prompts, responses, or code.</p></details>
+            <details><summary>Is a subscription percentage the same as a token count?</summary><p>No. Factual tokens and subscription window percentages are handled separately. Percentages enter only with a sourced, timestamped calibration from the provider — never converted from token math, never back-filled from text length.</p></details>
+            <details><summary>Will it actually stop my agent?</summary><p>The protocol returns DENY when a window is out of room or its data is stale, and the agent treats that as an absolute stop. For a hard technical block you need an enforcing host: the optional codex-managed launcher for Codex, or your own hook, wrapper, or proxy. It never claims a cap it can't enforce.</p></details>
+            <details><summary>What happens when usage data goes stale?</summary><p>Fail-closed: the gate returns DENY_USAGE_UNAVAILABLE instead of guessing. Never estimating missing factual usage from text length is a rule, not a fallback.</p></details>
+          </div>
+        </section>
+
+        <section class="final-cta" aria-labelledby="cta-heading">
+          <div>
+            <p class="eyebrow">YOUR LEDGER, YOUR RULES</p>
+            <h2 id="cta-heading">Run the next project on a budget.</h2>
+            <p>Ship features with the receipts to prove what they cost.</p>
+          </div>
+          <a class="button button-primary" href="#start">Get started <span aria-hidden="true">↓</span></a>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <a class="brand footer-brand" href="./"><img src="logo.svg" alt="" width="30" height="30"><span>Token Budget</span></a>
+        <p>Deterministic token budgeting for people who want their agents to prove it.</p>
+        <div class="footer-links"><a href="https://github.com/brandonth92/token-budget-controller">Source code</a><a href="https://github.com/brandonth92/token-budget-controller/blob/main/UNIVERSAL-USAGE-BUDGET.md">Universal Protocol</a><a href="https://github.com/brandonth92/token-budget-controller/blob/main/docs/PRIVACY.md">Privacy</a><a href="https://github.com/brandonth92/token-budget-controller/blob/main/LICENSE">MIT License</a><a href="https://brandonth92.github.io/sonotype/">My other tool: Sonotype</a></div>
+        <p class="copyright">Built by Brandon · MIT license · Python 3.10+ · Codex &amp; Claude Code MVP</p>
+      </footer>
+    </div>
+  </body>
+</html>
