@@ -1,26 +1,26 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <!-- Background: cream rounded square (same family as Sonotype) -->
-  <rect width="512" height="512" rx="112" ry="112" fill="#f7f5ef" stroke="#315d45" stroke-opacity="0.18" stroke-width="3"/>
+  <!-- Background: near-black rounded square -->
+  <rect width="512" height="512" rx="112" ry="112" fill="#0b0e14" stroke="#2b3649" stroke-opacity="0.9" stroke-width="3"/>
 
   <!-- Rising bar chart on the left, leveling to a governed line on the right -->
-  <rect x="80"  y="276" width="16" height="80"  rx="8" fill="#315d45"/>
-  <rect x="108" y="236" width="16" height="120" rx="8" fill="#315d45"/>
-  <rect x="136" y="196" width="16" height="160" rx="8" fill="#315d45"/>
-  <rect x="164" y="156" width="16" height="200" rx="8" fill="#315d45"/>
+  <rect x="80"  y="276" width="16" height="80"  rx="8" fill="#b8ff4a"/>
+  <rect x="108" y="236" width="16" height="120" rx="8" fill="#b8ff4a"/>
+  <rect x="136" y="196" width="16" height="160" rx="8" fill="#b8ff4a"/>
+  <rect x="164" y="156" width="16" height="200" rx="8" fill="#b8ff4a"/>
 
   <!-- Governed zone: bars capped at the budget ceiling -->
-  <rect x="192" y="186" width="16" height="140" rx="8" fill="#315d45" opacity="0.85"/>
-  <rect x="220" y="196" width="16" height="130" rx="8" fill="#315d45" opacity="0.85"/>
+  <rect x="192" y="186" width="16" height="140" rx="8" fill="#b8ff4a" opacity="0.85"/>
+  <rect x="220" y="196" width="16" height="130" rx="8" fill="#b8ff4a" opacity="0.85"/>
 
   <!-- Budget ceiling line (red stop) over the governed bars -->
-  <rect x="192" y="176" width="44" height="6" rx="3" fill="#a13d38"/>
+  <rect x="192" y="176" width="44" height="6" rx="3" fill="#ff6a5c"/>
 
   <!-- Even ledger rows flowing right: usage recorded, category by category -->
-  <rect x="284" y="200" width="72" height="12" rx="6" fill="#315d45" opacity="0.55"/>
-  <rect x="284" y="222" width="56" height="12" rx="6" fill="#315d45" opacity="0.55"/>
-  <rect x="284" y="244" width="88" height="12" rx="6" fill="#315d45" opacity="0.55"/>
-  <rect x="284" y="266" width="64" height="12" rx="6" fill="#315d45" opacity="0.55"/>
+  <rect x="284" y="200" width="72" height="12" rx="6" fill="#65d9ff" opacity="0.8"/>
+  <rect x="284" y="222" width="56" height="12" rx="6" fill="#65d9ff" opacity="0.55"/>
+  <rect x="284" y="244" width="88" height="12" rx="6" fill="#65d9ff" opacity="0.7"/>
+  <rect x="284" y="266" width="64" height="12" rx="6" fill="#65d9ff" opacity="0.45"/>
 
   <!-- Checkmark receipt accent at bottom right -->
-  <polygon points="396,330 410,346 432,316 424,306 410,328 404,322" fill="#315d45" opacity="0.35"/>
+  <polygon points="396,330 410,346 432,316 424,306 410,328 404,322" fill="#b8ff4a" opacity="0.65"/>
 </svg>
